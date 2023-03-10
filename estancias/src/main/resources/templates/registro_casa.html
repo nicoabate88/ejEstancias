@@ -77,8 +77,12 @@
                     <textarea type="textarea" class="form-control" name="obs"></textarea>
                 </div>
               <div>
-                    <label for="imagen">Imagen</label>
+                    <label for="imagen">Imagen 1</label>
                     <input type="file"  class="form-control" name="imagen">                 
+                </div>
+               <div>
+                    <label for="imagen">Imagen 2</label>
+                    <input type="file"  class="form-control" name="imagen2">                 
                 </div>
                 <div th:each="familia : ${usuario}">
                      <input hidden th:value="${familia.id}" name="idFamilia">

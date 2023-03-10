@@ -22,6 +22,14 @@
             <h3>Reserva de Casa/Estancia</h3>
             <br>
             <form class="formulario" th:action="@{/reserva/registrar}" method="POST">
+                
+                 <div th:if="${error != null}" class="card text-white bg-danger mb-3 mensajeError" >
+                    <div class="card-body">
+                        <h5 class="card-title">Error</h5>
+                        <p class="card-text" th:text="${error}"></p>
+                    </div>
+                </div>
+                
             <div th:each="casa : ${casa}" >
                 
                 <div class="card" style="width: 50rem;">
@@ -29,18 +37,20 @@
                     <h5 th:text=" 'Ubicación: ' + ${casa.ciudad} + ', ' + ${casa.pais}"></h5>
                     <h5 th:text=" 'Disponible desde ' + ${casa.fechaDesde} + ' hasta ' + ${casa.fechaHasta}"></h5>
                     <h5 th:text=" 'Dias Minino: ' + ${casa.minDias} + ' - Dias Maximo ' + ${casa.maxDias}"></h5>
+                    <h5 th:text=" 'Cantidad de Huespedes ' + ${casa.huespedes}"></h5>
+                    <h4 th:text=" 'TOTAL A PAGAR $ ' + ${casa.precio}"></h4>
                     <br>
                      <div class="form-group my-3">
                          <h4>Reserva</h4>
                      <label for="floatingTextarea">Fecha desde</label>
-                    <input type="date" class="form-control" name="fechaDesde" placeholder="Fecha Desde">
+                    <input type="date" th:min="${casa.fechaDesde}" class="form-control" name="fechaDesde" placeholder="Fecha Desde">
                 </div>
                <div class="form-group my-3">
                      <label for="floatingTextarea">Fecha hasta</label>
-                    <input type="date" class="form-control" name="fechaHasta" placeholder="Numero de huesped/es">
+                    <input type="date" th:max="${casa.fechaHasta}" class="form-control" name="fechaHasta" placeholder="Numero de huesped/es">
                 </div>
                        <div class="form-group my-3">
-                    <input type="number" class="form-control" name="huesped" placeholder="Numero de Huespedes">
+                    <input type="number" th:max="${casa.huespedes}" class="form-control" name="huesped" placeholder="Numero de Huespedes">
                 </div>
                      <div th:each="cliente : ${usuario}">
                      <input hidden th:value="${cliente.id}" name="idCliente">
@@ -56,6 +66,7 @@
                 <a th:href="@{/inicio}"><button type="button" class="btn btn-primary">Volver</button></a>
             </div>
             </form>
+        
         </div>
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

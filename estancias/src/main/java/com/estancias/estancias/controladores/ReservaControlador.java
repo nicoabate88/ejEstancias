@@ -1,10 +1,15 @@
 
 package com.estancias.estancias.controladores;
 
+import com.estancias.estancias.entidades.Casa;
+import com.estancias.estancias.entidades.Reserva;
 import com.estancias.estancias.entidades.Usuario;
+import com.estancias.estancias.excepciones.MiException;
 import com.estancias.estancias.servicios.CasaServicio;
 import com.estancias.estancias.servicios.ReservaServicio;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,16 +38,41 @@ public class ReservaControlador {
         
         Usuario logueado =  (Usuario) session.getAttribute("usuariosession");
         modelo.addAttribute("usuario", logueado);
-        
+                
         return "registro_reserva.html";
     }
     
     @PostMapping("/registrar")
     public String registrar(@RequestParam String fechaDesde, @RequestParam String fechaHasta, @RequestParam Integer huesped,
-            @RequestParam Long idCliente, @RequestParam Long idCasa) throws ParseException{
+            @RequestParam Long idCliente, @RequestParam Long idCasa, ModelMap modelo, HttpSession session) throws ParseException, MiException {
+            
+             Usuario logueado =  (Usuario) session.getAttribute("usuariosession");
+             modelo.addAttribute("usuario", logueado);
+        try {
+            reservaServicio.crearReserva(fechaDesde, fechaHasta, huesped, idCliente, idCasa);
+            
+            return "mensaje_reserva.html";
+        } catch (MiException ex) {
+            modelo.put("error", ex.getMessage());
+            modelo.put("casa", casaServicio.mostrarCasa(idCasa));
+           
+            modelo.addAttribute("usuario", logueado);
+            return "registro_reserva.html";
+        }
+    }
+    
+    @GetMapping("/mostrarReservas/{id}")
+    public String mostarReservas(@PathVariable Long id, ModelMap modelo){
         
-        reservaServicio.crearReserva(fechaDesde, fechaHasta, huesped, idCliente, idCasa);
+        ArrayList<Reserva> listaReservas = new ArrayList();
+       
+        listaReservas = reservaServicio.buscarReservas(id);
         
-        return "inicio.html";
+        modelo.addAttribute("listaR", listaReservas);
+        
+        ArrayList<Casa> listaCasas = casaServicio.listarCasas();
+        modelo.addAttribute("listaC", listaCasas);
+        
+        return "mostrar_reservas.html";
     }
 }

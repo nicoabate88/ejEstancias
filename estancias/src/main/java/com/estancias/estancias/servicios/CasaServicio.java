@@ -24,7 +24,8 @@ public class CasaServicio {
     
     @Transactional
     public void crearCasa(String calle, Integer numero, String codPostal, String ciudad, String pais, String fechaDesde, String fechaHasta,
-            Integer minDias, Integer maxDias, Double precio, String tipoVivienda, Integer huespedes, String obs, MultipartFile imagen, Long idFamilia) throws ParseException{
+            Integer minDias, Integer maxDias, Double precio, String tipoVivienda, Integer huespedes, String obs, MultipartFile imagen, MultipartFile imagen2, 
+            Long idFamilia) throws ParseException{
         
         Date fechaD = convertirFecha(fechaDesde); //convirte fecha String a Fecha Date
         Date fechaH = convertirFecha(fechaHasta);
@@ -51,6 +52,7 @@ public class CasaServicio {
         casa.setHuespedes(huespedes);
         casa.setObservacion(obs);
         casa.setImagen(imagen.getOriginalFilename());
+        casa.setImagen2(imagen2.getOriginalFilename());
         casa.setFamilia(flia);
         casa.setReserva(false);
         casa.setFechaAlta(new Date());

@@ -2,6 +2,7 @@
 package com.estancias.estancias.servicios;
 
 import com.estancias.estancias.entidades.Familia;
+import com.estancias.estancias.excepciones.MiException;
 import com.estancias.estancias.repositorios.FamiliaRepositorio;
 import java.util.Date;
 import javax.transaction.Transactional;
@@ -17,7 +18,9 @@ public class FamiliaServicio {
     
     @Transactional
     public void crearFamilia(String alias, String nombre, String email, Integer edadMin, Integer edadMax,
-            Integer numHijos, String clave, String clave2){
+            Integer numHijos, String clave, String clave2) throws MiException{
+        
+        validar(alias, nombre, email, edadMin, edadMax, numHijos, clave, clave2);
         
         Familia familia = new Familia();
         
@@ -31,6 +34,29 @@ public class FamiliaServicio {
         familia.setClave(new BCryptPasswordEncoder().encode(clave));
         
         familiaRepositorio.save(familia);
+        
+    }
+    private void validar(String alias, String nombre, String email, Integer edadMin, Integer edadMax,
+            Integer numHijos, String clave, String clave2) throws MiException{
+        
+        if(alias.isEmpty() || alias==null){
+            throw new MiException("El Alias no puede estar vacio");
+        }
+        if(nombre.isEmpty() || nombre==null){
+            throw new MiException("El Nombre no puede estar vacio");
+        }
+        if(email.isEmpty() || email==null){
+            throw new MiException("El Email no puede estar vacio");
+        }
+          if(edadMin>edadMax){
+            throw new MiException("Edad Minima no puede ser mayor que Edad Maxima");
+        }
+         if(clave.isEmpty() || clave==null){
+            throw new MiException("La clave no puede estar vacia");
+        }  
+          if(!clave.equals(clave2)){
+              throw new MiException("Las claves ingresadas deben ser iguales");
+          }
         
     }
 }

@@ -42,7 +42,8 @@ public class CasaControlador {
     public String registrar(@RequestParam String calle,@RequestParam Integer numero, @RequestParam String codPostal, 
     @RequestParam String ciudad, @RequestParam String pais, @RequestParam String fechaDesde, @RequestParam String fechaHasta,
     @RequestParam Integer minDias, @RequestParam Integer maxDias, @RequestParam Double precio, @RequestParam String tipoVivienda, 
-    @RequestParam Integer huespedes, @RequestParam String obs, @RequestParam() MultipartFile imagen, @RequestParam Long idFamilia) throws ParseException{
+    @RequestParam Integer huespedes, @RequestParam String obs, @RequestParam() MultipartFile imagen, @RequestParam() MultipartFile imagen2, 
+    @RequestParam Long idFamilia) throws ParseException{
         
          if (!imagen.isEmpty()) {
             Path directorioImagenes = Paths.get("src//main//resources//static/images");
@@ -56,8 +57,20 @@ public class CasaControlador {
                 e.printStackTrace();
             }
         }
+         if (!imagen2.isEmpty()) {
+            Path directorioImagenes = Paths.get("src//main//resources//static/images");
+            String rutaAbsoluta = directorioImagenes.toFile().getAbsolutePath();
+            try {
+                byte[] bytesImg = imagen2.getBytes();
+                Path rutaCompleta = Paths.get(rutaAbsoluta + "//" + imagen2.getOriginalFilename());
+                Files.write(rutaCompleta, bytesImg);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         
-        casaServicio.crearCasa(calle, numero, codPostal, ciudad, pais, fechaDesde, fechaHasta, minDias, maxDias, precio, tipoVivienda, huespedes, obs, imagen, idFamilia);
+        casaServicio.crearCasa(calle, numero, codPostal, ciudad, pais, fechaDesde, fechaHasta, minDias, maxDias, precio, tipoVivienda, huespedes, obs, imagen, imagen2, idFamilia);
      
         return "registro_casa.html";
     }
@@ -84,13 +97,16 @@ public class CasaControlador {
     
     @GetMapping("/mostrarCasas/{id}") //muestra listado de casas segun id de familia
     public String mostrarCasas(@PathVariable Long id, ModelMap modelo){
-        
+    
         ArrayList<Casa> listaCasas = new ArrayList();
-        
         listaCasas = casaServicio.mostrarCasas(id);
-        
         modelo.addAttribute("lista", listaCasas);
         
+        int vacio = 1;
+        if(listaCasas.isEmpty()){
+            vacio = 0;
+        }
+        modelo.put("vacio", vacio);
         return "mostrar_casas.html";
     }
     
@@ -99,7 +115,7 @@ public class CasaControlador {
         
        modelo.put("casa", casaServicio.mostrarCasa(id));
         
-        return "modificar_casa.html";
+       return "modificar_casa.html";
     }
     
     @PostMapping("/modificar/{id}")

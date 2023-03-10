@@ -21,6 +21,9 @@
                                 <a class="nav-link active" aria-current="page" th:href="@{/casa/registro}" sec:authorize="hasAnyRole('Admin','Familia')">Nueva Casa</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" th:href="@{/reserva/mostrarReservas/__${usuario.id}__}" sec:authorize="hasAnyRole('Admin','Cliente')">Mis Reservas</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" th:href="@{/casa/mostrarCasas/__${usuario.id}__}" sec:authorize="hasAnyRole('Admin','Familia')">Ver Mi Casa</a>
                             </li>
                             <li class="nav-item">
@@ -34,13 +37,11 @@
                                 <a class="nav-link active" aria-current="page" th:href="@{/logout}" sec:authorize="hasAnyRole('Admin','Familia','Cliente')">Cerrar Sesión</a>
                             </li>   
                         </ul>
-                        
                     </div>
                 </div>
             </nav>
         </div>
         <br>
-           
        
         <div class="container shadow" align="center">
             <div class="row shadow" th:each="casa : ${lista}" th:if="${casa.reserva==false}">    <!--shadow-->
@@ -49,7 +50,7 @@
                         <img class="img-thumbnail rounded float-righ"
                              th:src="@{'/images/' + ${casa.imagen}}"
                              th:alt="${casa.imagen}"
-                             style="max-width: 300; max-width: 250;">
+                             style="max-width: 350; max-width: 350;">
                         <h4 th:text="${casa.ciudad}"></h4>
                         <h5 th:text=" 'Tipo ' + ${casa.tipoVivienda}"></h5>
                         <h5 th:text=" 'Precio $' + ${casa.precio}"></h5>

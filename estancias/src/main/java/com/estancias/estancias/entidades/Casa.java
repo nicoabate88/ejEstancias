@@ -34,6 +34,7 @@ public class Casa {
     private boolean reserva;
     private Integer huespedes;
     private String imagen;
+    private String imagen2;
     private String observacion;
     @OneToOne
     private Familia familia;
@@ -183,6 +184,14 @@ public class Casa {
 
     public void setObservacion(String observacion) {
         this.observacion = observacion;
+    }
+
+    public String getImagen2() {
+        return imagen2;
+    }
+
+    public void setImagen2(String imagen2) {
+        this.imagen2 = imagen2;
     }
     
     
